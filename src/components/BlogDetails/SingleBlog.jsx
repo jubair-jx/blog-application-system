@@ -1,43 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSinBlog } from "../../features/Blog/SinBlogSlice";
+import { useParams } from "react-router-dom";
+import Loading from "../../Common/Loading";
+import RelatedBlogPost from "./RelatedBlogPost";
+import SingleBlogItem from "./SingleBlogItem";
 
 const SingleBlog = () => {
-  return (
-    <main class="post">
-      <img
-        src="./images/mern.webp"
-        alt="githum"
-        class="w-full rounded-md"
-        id="lws-megaThumb"
-      />
-      <div>
-        <h1 class="mt-6 text-2xl post-title" id="lws-singleTitle">
-          MERN stack for Web Development
-        </h1>
-        <div class="tags" id="lws-singleTags">
-          <span>#python,</span> <span>#tech,</span> <span>#git</span>
-        </div>
-        <div class="btn-group">
-          <button class="like-btn" id="lws-singleLinks">
-            <i class="fa-regular fa-thumbs-up"></i> 100
-          </button>
-          <button class="active save-btn" id="lws-singleSavedBtn">
-            <i class="fa-regular fa-bookmark"></i> Saved
-          </button>
-        </div>
-        <div class="mt-6">
-          <p>
-            A MERN stack comprises a collection of four frameworks (MongoDB,
-            ExpressJs, ReactJs and NodeJs) used to develop full-stack javascript
-            solutions for rapid, scalable, and secure applications. Each
-            framework serves a different purpose in creating successful web
-            applications. It is an excellent choice for companies looking to
-            develop high-quality responsive applications quickly using just one
-            language.
-          </p>
-        </div>
-      </div>
-    </main>
+  const dispatch = useDispatch();
+  const { sinBlogs, isLoading, isError, error } = useSelector(
+    (state) => state.blog
   );
+  console.log(sinBlogs);
+
+  const { id, title, image, likes, isSaved, tags } = sinBlogs || {};
+  const { blogId } = useParams();
+  useEffect(() => {
+    dispatch(fetchSinBlog(blogId));
+  }, [dispatch, blogId]);
+
+  let content = null;
+  if (isLoading) content = <Loading />;
+  if (!isLoading && isError)
+    content = <div className="col-span-12">{error}</div>;
+  if (!isLoading && !isError && !sinBlogs?.id) {
+    content = (
+      <div className="col-span-12 text-2xl font-semibold">Not Found Blogs</div>
+    );
+  }
+  if (!isLoading && !isError && sinBlogs?.id) {
+    content = (
+      <>
+        <SingleBlogItem blog={sinBlogs} />
+        <RelatedBlogPost relatedId={id} tags={tags} />{" "}
+      </>
+    );
+  }
+  return <section class="post-page-container">{content}</section>;
 };
 
 export default SingleBlog;

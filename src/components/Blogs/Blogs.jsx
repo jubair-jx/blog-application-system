@@ -7,10 +7,7 @@ const Blogs = () => {
   return (
     <>
       <GotoHome />
-      <section class="post-page-container">
-        <SingleBlog />
-        <RelatedBlogPost />
-      </section>
+      <SingleBlog />
     </>
   );
 };

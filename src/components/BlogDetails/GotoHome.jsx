@@ -1,15 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const GotoHome = () => {
   return (
     <div class="container mt-8">
-      <a
-        href="index.html"
+      <Link
+        to={"/"}
         class="inline-block text-gray-600 home-btn"
         id="lws-goHome"
       >
         <i class="mr-2 fa-solid fa-house"></i>Go Home
-      </a>{" "}
+      </Link>{" "}
     </div>
   );
 };
